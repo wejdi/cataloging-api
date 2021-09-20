@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  back_app:
+    depends_on:
+      - db
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URL=mongodb://db_mongo
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      
+  db:
+    image: mongo
+    container_name: db_mongo
+    volumes:
+      - mongodb_data_container:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodb_data_container: 
