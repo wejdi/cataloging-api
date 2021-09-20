@@ -28,22 +28,24 @@ export class ProductsService {
       modified_at: new Date()
 
     });
-    return await createdProduct.save();
+    try {
+      return await createdProduct.save();
+    } catch (error) {
+      this.logger.error(`create: Unable to add product du to a server error, error: ${error}`);
+      throw new HttpException ('Server error: Unable to add new product', HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
   /**
    * Find all product
    */
   async findAll(): Promise<Product[]> {
     this.logger.debug(`findAll: Search all products`);
-    let products: Product[];
     try {
-      products = await this.productModel.find().exec();
+      return await this.productModel.find().exec();
     } catch (error) {
       this.logger.error(`findAll: Unable to get products du to a server error, error: ${error}`);
       throw new HttpException ('Server error: Unable to get products', HttpStatus.INTERNAL_SERVER_ERROR)
     }
-
-    return products;
 
   }
   /**
